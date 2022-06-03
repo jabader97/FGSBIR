@@ -16,6 +16,7 @@ class Options:
         parser = argparse.ArgumentParser(description='Fine-Grained SBIR Model')
 
         parser.add_argument('--dataset_name', type=str, default='ShoeV2')
+        parser.add_argument('--model', type=str, default='baseline')
         parser.add_argument('--backbone_name', type=str, default='VGG', help='VGG / InceptionV3/ Resnet50')
         parser.add_argument('--pool_method', type=str, default='AdaptiveAvgPool2d',
                             help='AdaptiveMaxPool2d / AdaptiveAvgPool2d / AvgPool2d')

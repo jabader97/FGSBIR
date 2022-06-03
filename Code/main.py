@@ -1,10 +1,11 @@
 import torch
 import time
-from model import FGSBIR_Model
 from dataset import get_dataloader
-device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 from options import Options
 import os
+from utils import evaluate
+from models import get_model
+device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
 
 if __name__ == "__main__":
@@ -17,9 +18,8 @@ if __name__ == "__main__":
         else:
             hp.savename = ''
 
-    model = FGSBIR_Model(hp)
+    model = get_model(hp)
     model.to(device)
-    # model.load_state_dict(torch.load('VGG_ShoeV2_model_best.pth', map_location=device))
     step_count, top1, top10 = -1, 0, 0
     torch.manual_seed(hp.seed)
 
@@ -45,7 +45,7 @@ if __name__ == "__main__":
 
             if step_count % hp.eval_freq_iter == 0:
                 with torch.no_grad():
-                    top1_eval, top10_eval = model.evaluate(dataloader_Test)
+                    top1_eval, top10_eval = evaluate(model, dataloader_Test)
                     print('results : ', top1_eval, ' / ', top10_eval)
 
                 if top1_eval > top1:
