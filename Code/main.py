@@ -52,6 +52,6 @@ if __name__ == "__main__":
                     torch.save(model.state_dict(), hp.backbone_name + '_' + hp.dataset_name + '_model_best.pth')
                     top1, top10 = top1_eval, top10_eval
                     print('Model Updated')
-                if hp.log_online:
-                    valid_data = {'top1_eval': top1_eval, 'top10_eval': top10_eval}
-                    wandb.log(valid_data)
+        if hp.log_online:
+            valid_data = {'top1_eval': top1_eval, 'top10_eval': top10_eval}
+            wandb.log(valid_data)
