@@ -15,8 +15,8 @@ class FGSBIR_Model(nn.Module):
         self.loss = nn.TripletMarginLoss(margin=0.2)
         self.sample_train_params = self.sample_embedding_network.parameters()
         self.optimizer = optim.Adam(self.sample_train_params, hp.learning_rate)
+        torch.manual_seed(hp.seed)
         self.hp = hp
-
 
     def train_model(self, batch):
         self.train()

@@ -9,14 +9,14 @@ import random
 import torchvision.transforms.functional as F
 from rasterize import rasterize_Sketch
 
-
-
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+
 
 class FGSBIR_Dataset(data.Dataset):
     def __init__(self, hp, mode):
 
         self.hp = hp
+        torch.manual_seed(hp.seed)
         self.mode = mode
         coordinate_path = os.path.join(hp.root_dir, 'Dataset', hp.dataset_name , hp.dataset_name + '_Coordinate')
         self.root_dir = os.path.join(hp.root_dir, 'Dataset', hp.dataset_name)
@@ -87,6 +87,7 @@ class FGSBIR_Dataset(data.Dataset):
         elif self.mode == 'Test':
             return len(self.Test_Sketch)
 
+
 def get_dataloader(hp):
 
     dataset_Train  = FGSBIR_Dataset(hp, mode = 'Train')
@@ -99,11 +100,12 @@ def get_dataloader(hp):
 
     return dataloader_Train, dataloader_Test
 
+
 def get_ransform(type):
     transform_list = []
-    if type is 'Train':
+    if type == 'Train':
         transform_list.extend([transforms.Resize(299)])
-    elif type is 'Test':
+    elif type == 'Test':
         transform_list.extend([transforms.Resize(299)])
     transform_list.extend(
         [transforms.ToTensor(), transforms.Normalize(mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225])])

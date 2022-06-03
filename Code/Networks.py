@@ -17,7 +17,7 @@ class Resnet50_Network(nn.Module):
             if name not in ['avgpool', 'fc']:
                 self.features.add_module(name, module)
         self.pool_method =  nn.AdaptiveMaxPool2d(1)
-
+        torch.manual_seed(hp.seed)
 
     def forward(self, input, bb_box = None):
         x = self.features(input)
@@ -31,6 +31,7 @@ class VGG_Network(nn.Module):
         super(VGG_Network, self).__init__()
         self.backbone = backbone_.vgg16(pretrained=True).features
         self.pool_method =  nn.AdaptiveMaxPool2d(1)
+        torch.manual_seed(hp.seed)
 
     def forward(self, input, bb_box = None):
         x = self.backbone(input)
@@ -41,6 +42,7 @@ class InceptionV3_Network(nn.Module):
     def __init__(self, hp):
         super(InceptionV3_Network, self).__init__()
         backbone = backbone_.inception_v3(pretrained=True)
+        torch.manual_seed(hp.seed)
 
         ## Extract Inception Layers ##
         self.Conv2d_1a_3x3 = backbone.Conv2d_1a_3x3
