@@ -104,3 +104,26 @@ class InceptionV3_Network(nn.Module):
         backbone_tensor = self.Mixed_7c(x)
         feature = self.pool_method(backbone_tensor).view(-1, 2048)
         return F.normalize(feature)
+
+
+class VGG_with_Attention_Network(nn.Module):
+    def __init__(self, hp):
+        super(VGG_with_Attention_Network, self).__init__()
+        self.backbone = backbone_.vgg16(pretrained=True).features
+        self.attention_net = nn.Sequential(
+          nn.Conv2d(512, 512, 1),
+          nn.ReLU(),
+          nn.Conv2d(512, 512, 1),
+          nn.Flatten(start_dim=2),
+          nn.Softmax(dim=2),
+          nn.Unflatten(2, torch.Size([9, 9]))
+        )
+        self.pool_method = nn.AdaptiveMaxPool2d(1)
+        torch.manual_seed(hp.seed)
+
+    def forward(self, input, bb_box=None):
+        x = self.backbone(input)
+        attention = self.attention_net(x)
+        x = x * attention
+        x = self.pool_method(x).view(-1, 512)
+        return F.normalize(x)

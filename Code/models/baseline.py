@@ -1,6 +1,6 @@
 from torch.autograd import Variable
 import torch.nn as nn
-from Networks import VGG_Network, InceptionV3_Network, Resnet50_Network
+from Networks import VGG_Network, InceptionV3_Network, Resnet50_Network, VGG_with_Attention_Network
 from torch import optim
 import torch
 import time
