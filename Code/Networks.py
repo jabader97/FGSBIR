@@ -111,10 +111,10 @@ class VGG_with_Attention_Network(nn.Module):
         super(VGG_with_Attention_Network, self).__init__()
         self.backbone = backbone_.vgg16(pretrained=True).features
         self.attention_net = nn.Sequential(
-          nn.Conv2d(512, 512, 1),
+          nn.Conv2d(512, 256, (1, 1)),
           nn.ReLU(),
-          nn.Conv2d(512, 512, 1),
-          nn.Flatten(start_dim=2),
+          nn.Conv2d(256, 1, (1, 1)),
+          nn.Flatten(start_dim=2, end_dim=3),
           nn.Softmax(dim=2),
           nn.Unflatten(2, torch.Size([9, 9]))
         )
@@ -124,6 +124,6 @@ class VGG_with_Attention_Network(nn.Module):
     def forward(self, input, bb_box=None):
         x = self.backbone(input)
         attention = self.attention_net(x)
-        x = x * attention
+        x = (x * attention) + x
         x = self.pool_method(x).view(-1, 512)
         return F.normalize(x)
